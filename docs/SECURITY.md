@@ -1,0 +1,13 @@
+# Local data handling
+
+This is a local, single-user evaluation tool. It has no login, role-based authorisation, tenant isolation, encrypted report store or enterprise hosting layer. Keep the default `127.0.0.1` binding. Docker's example publishes only on host loopback. Any deliberate network deployment needs an authenticated reverse proxy and a separate security review.
+
+Tokens are Pydantic SecretStr values, excluded from snapshots/repr, never prefilled in browser controls, and cleared from the input after saving. Settings and tokens remain server-side. Live responses and complete exported runs are recursively scrubbed for the configured token and sensitive key names. Arbitrary HTTP bodies, URLs and exception text are not copied into error messages. Application logs contain IDs/counts/status only; HTTP debug logs are suppressed. Do not enable third-party debug tracing with customer data.
+
+HTTPS is required for tenants except loopback test servers. Redirects are not followed, preventing bearer credentials being forwarded to another origin. httpx ignores ambient proxies (`trust_env=False`); enterprise proxy configuration is not implemented. The app performs no model generation, scenario tools, remote code execution or outbound telemetry. Gradio analytics and Hugging Face telemetry are disabled; fonts and Plotly assets are local. Only configured live API calls leave the server during normal use.
+
+Inputs are limited to 10 MiB by default, 10,000 scenarios, and 200,000 characters per text field. CSV/JSONL only; no pickle, eval, executable templates or shell interpretation. Reports escape scenario and API text; CSV cells are protected against common spreadsheet formula prefixes. JSONL preserves literal content as data, so treat it as untrusted when importing into other tools.
+
+Persistence is opt-in. The UI must retain the active dataset and run in RAM to display them; an hour of state TTL bounds normal session retention. Uploads and downloadable file copies necessarily use Gradio's private temporary directory (five-minute cleanup, plus normal shutdown cleanup). An abrupt kill can leave cache files. Explicit exports have 0700 run folders and 0600 files and remain until manually removed. Folder ancestors follow the operating system's permissions. Your browser and operating system may cache data independently. F5 tenant recording/retention is controlled on the tenant; local persistence flags do not disable remote recording.
+
+Cancellation is cooperative: active requests finish or time out, and responses may already be recorded by F5. No request retries are a guarantee against duplicate remote records. HTTP-status retries for POST scans are opt-in for this reason.
