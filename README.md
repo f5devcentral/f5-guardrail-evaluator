@@ -4,6 +4,8 @@ A standalone Python console for input-only scans, predefined response scans, and
 
 This is an independent local implementation informed by [F5 Prompt Evaluator](https://github.com/f5devcentral/prompt-evaluator), not an official F5 product or a modification of that repository. See [research and attribution](docs/RESEARCH.md).
 
+For Windows setup, see the [Windows README](README-WINDOWS.md).
+
 ## Install and launch on macOS
 
 Clone the repository and create a local virtual environment:
